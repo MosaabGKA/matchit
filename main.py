@@ -2,7 +2,6 @@ import flet as ft
 import random
 import time
 import smtplib
-import ssl
 
 
 def main(page: ft.Page):
@@ -43,9 +42,10 @@ def main(page: ft.Page):
         body = f'Hello, Developer of Matchit!\nA player called {player_name} has sent you this rating for Matchit Game\nRating: {round(rating_slider.current.value, 0)}/10\nComments: "{self.control.value}"\nBR,\nMatchit Game Software.'
         message = f'Subject: {subject}\n\n{body}'
         with smtplib.SMTP(smtp_server, smtp_port) as smtp:
-            smtp.starttls(context=ssl.create_default_context())
+            smtp.starttls()
             smtp.login(smtp_username, smtp_password)
             smtp.sendmail(from_email, to_email, message)
+            smtp.close()
         self.control.value = f"Rating and comments were successfully sent to the developers of Matchit."
         page.update()
 
@@ -63,9 +63,10 @@ def main(page: ft.Page):
         body = f'Hello, {player_name}!\nYou have matched {answered} correct pairs of pictures in {round(time_taken, 1)} seconds in Level {lvl+1} in Match It Game!\nBR,\nMatch It Developers Team.'
         message = f'Subject: {subject}\n\n{body}'
         with smtplib.SMTP(smtp_server, smtp_port) as smtp:
-            smtp.starttls(context=ssl.create_default_context())
+            smtp.starttls()
             smtp.login(smtp_username, smtp_password)
             smtp.sendmail(from_email, to_email, message)
+            smtp.close()
         self.control.value = f"Email was successfully sent to {self.control.value}."
         page.update()
 
@@ -121,12 +122,14 @@ def main(page: ft.Page):
         if time.time()-start_time <= time_limits[lvl] and moves_limits[lvl]-moves_done > 0:
             timer.current.value = f"{time_limits[lvl]-(time.time()-start_time):.1f}secs"
             page.update()
+            return True
         else:
             lose_game()
+            return False
 
     def picture_selected(e):
         global answer_pairs, answered, moves_done, theme
-        check_timer()
+        if not check_timer(): return None
         if len(selected) == 0:
             selected.append(e.control.data[0])
             e.control.style.side = ft.BorderSide(2, ft.colors.WHITE)
@@ -159,6 +162,7 @@ def main(page: ft.Page):
                     selected.clear()
                     selected_mirror.clear()
                     if answered == no_of_pics[lvl]//2:
+                        time.sleep(1)
                         win_game()
                 elif selected_mirror in answer_pairs:
                     answer_pairs.remove(selected_mirror)
@@ -171,6 +175,7 @@ def main(page: ft.Page):
                     selected.clear()
                     selected_mirror.clear()
                     if answered == no_of_pics[lvl]//2:
+                        time.sleep(1)
                         win_game()
                 else:
                     for i in selected:
@@ -224,7 +229,9 @@ def main(page: ft.Page):
         check_timer()
         page.update()
         selected.clear()
-        if answered == no_of_pics[lvl] // 2: win_game()
+        if answered == no_of_pics[lvl] // 2:
+            time.sleep(1)
+            win_game()
 
     def use_hint(self):
         if self.control.data == 0: reveal_correct_pair()

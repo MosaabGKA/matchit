@@ -20,8 +20,8 @@ def main(page: ft.Page):
     hints = ("Reveal one correct pair", "Reveal first 3 pics", "Add more time and moves")
     themes = ("cats", "dogs", "flowers")
     no_of_pics = (6, 12, 16, 20)
-    x_dimentions = (3, 4, 4, 5)
-    y_dimentions = (2, 3, 4, 4)
+    x_dimensions = (3, 4, 4, 5)
+    y_dimensions = (2, 3, 4, 4)
     time_limits = (30, 60, 80, 100)
     moves_limits = (5, 10, 12, 15)
     answer_pairs = list()
@@ -32,18 +32,14 @@ def main(page: ft.Page):
         self.control.disabled = True
         rating_slider.current.disabled = True
         page.update()
-        smtp_server = 'smtp.gmail.com'
-        smtp_port = 587
-        smtp_username = 'mosaabgka@gmail.com'
-        smtp_password = 'kjayrwlmylamlubg'
         from_email = 'mosaabgka@gmail.com'
         to_email = 'matchit@mosaab.is-a.dev'
         subject = 'New Rating for Matchit!'
         body = f'Hello, Developer of Matchit!\nA player called {player_name} has sent you this rating for Matchit Game\nRating: {int(rating_slider.current.value)}/10\nComments: "{self.control.value}"\nBR,\nMatchit Game Software.'
         message = f'Subject: {subject}\n\n{body}'
-        with smtplib.SMTP(smtp_server, smtp_port) as smtp:
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
             smtp.starttls()
-            smtp.login(smtp_username, smtp_password)
+            smtp.login("mosaabgka@gmail.com", "kjayrwlmylamlubg")
             smtp.sendmail(from_email, to_email, message)
             smtp.close()
         self.control.value = f"Rating and comments were successfully sent to the developers of Matchit."
@@ -53,20 +49,16 @@ def main(page: ft.Page):
         global time_taken, answered, lvl, player_name
         self.control.disabled = True
         page.update()
-        smtp_server = 'smtp.gmail.com'
-        smtp_port = 587
-        smtp_username = 'mosaabgka@gmail.com'
-        smtp_password = 'kjayrwlmylamlubg'
         from_email = 'mosaabgka@gmail.com'
         to_email = f'{self.control.value}'
         subject = 'Your Result from Match It Game!'
         body = f'Hello, {player_name}!\nYou have matched {answered} correct pairs of pictures in {round(time_taken, 1)} seconds in Level {lvl+1} in Match It Game!\nBR,\nMatch It Developers Team.'
         message = f'Subject: {subject}\n\n{body}'
-        with smtplib.SMTP(smtp_server, smtp_port) as smtp:
-            smtp.starttls()
-            smtp.login(smtp_username, smtp_password)
-            smtp.sendmail(from_email, to_email, message)
-            smtp.close()
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.starttls()
+            server.login("mosaabgka@gmail.com", "kjayrwlmylamlubg")
+            server.sendmail(from_email, to_email, message)
+            server.close()
         self.control.value = f"Email was successfully sent to {self.control.value}."
         page.update()
 
@@ -122,29 +114,27 @@ def main(page: ft.Page):
         if time.time()-start_time <= time_limits[lvl] and moves_limits[lvl]-moves_done > 0:
             timer.current.value = f"{time_limits[lvl]-(time.time()-start_time):.1f}secs"
             page.update()
-            return True
         else:
             lose_game()
-            return False
 
-    def picture_selected(e):
+    def picture_selected(self):
         global answer_pairs, answered, moves_done, theme
-        if not check_timer(): return None
+        check_timer()
         if len(selected) == 0:
-            selected.append(e.control.data[0])
-            e.control.style.side = ft.BorderSide(2, ft.colors.WHITE)
-            e.control.content.content.src = f"/images/{themes[theme]}/{e.control.data[1]}.jpg"
+            selected.append(self.control.data[0])
+            self.control.style.side = ft.BorderSide(2, ft.colors.WHITE)
+            self.control.content.content.src = f"/images/{themes[theme]}/{self.control.data[1]}.jpg"
             page.update()
         else:
-            if e.control.data[0] in selected:
-                e.control.style.side = ft.BorderSide(0, ft.colors.WHITE)
-                e.control.content.content.src = f"/images/q.jpg"
+            if self.control.data[0] in selected:
+                self.control.style.side = ft.BorderSide(0, ft.colors.WHITE)
+                self.control.content.content.src = f"/images/q.jpg"
                 page.update()
-                selected.remove(e.control.data[0])
+                selected.remove(self.control.data[0])
             else:
-                selected.append(e.control.data[0])
-                e.control.style.side = ft.BorderSide(2, ft.colors.WHITE)
-                e.control.content.content.src = f"/images/{themes[theme]}/{e.control.data[1]}.jpg"
+                selected.append(self.control.data[0])
+                self.control.style.side = ft.BorderSide(2, ft.colors.WHITE)
+                self.control.content.content.src = f"/images/{themes[theme]}/{self.control.data[1]}.jpg"
                 moves_done += 1
                 moves.current.value = f"{moves_limits[lvl]-moves_done}moves"
                 page.update()
@@ -259,7 +249,7 @@ def main(page: ft.Page):
         answer_pairs = generate_answers(no_of_pics[lvl])
         page.controls.clear()
         answered, moves_done = 0, 0
-        time_left = x_dimentions[lvl]
+        time_left = x_dimensions[lvl]
         page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.add(
             ft.Row([
@@ -279,7 +269,7 @@ def main(page: ft.Page):
             ft.GridView(
                 ref=pics_grid,
                 expand=1,
-                runs_count=x_dimentions[lvl],
+                runs_count=x_dimensions[lvl],
                 child_aspect_ratio=1.5,
                 width=900
             )
@@ -302,7 +292,7 @@ def main(page: ft.Page):
                     disabled=True, data=(indx, i), on_click=picture_selected,
                 )
         page.update()
-        for i in range(x_dimentions[lvl]):
+        for i in range(x_dimensions[lvl]):
             time.sleep(1)
             time_left -= 1
             timer.current.value = f"{time_left}secs"

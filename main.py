@@ -252,6 +252,7 @@ def main(page: ft.Page):
         page.controls.clear()
         answered, moves_done = 0, 0
         time_left = x_dimentions[lvl]
+        page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         page.add(
             ft.Row([
                 ft.Container(content=ft.Row([
@@ -272,6 +273,7 @@ def main(page: ft.Page):
                 expand=1,
                 runs_count=x_dimentions[lvl],
                 child_aspect_ratio=1.5,
+                width=900
             )
         )
         pics_grid.current.controls = [None for i in range(no_of_pics[lvl])]

@@ -1,7 +1,8 @@
 import flet as ft
-import time
 import random
+import time
 import smtplib
+import ssl
 
 
 def main(page: ft.Page):
@@ -42,7 +43,7 @@ def main(page: ft.Page):
         body = f'Hello, Developer of Matchit!\nA player called {player_name} has sent you this rating for Matchit Game\nRating: {round(rating_slider.current.value, 0)}/10\nComments: "{self.control.value}"\nBR,\nMatchit Game Software.'
         message = f'Subject: {subject}\n\n{body}'
         with smtplib.SMTP(smtp_server, smtp_port) as smtp:
-            smtp.starttls()
+            smtp.starttls(context=ssl.create_default_context())
             smtp.login(smtp_username, smtp_password)
             smtp.sendmail(from_email, to_email, message)
         self.control.value = f"Rating and comments were successfully sent to the developers of Matchit."
@@ -62,7 +63,7 @@ def main(page: ft.Page):
         body = f'Hello, {player_name}!\nYou have matched {answered} correct pairs of pictures in {round(time_taken, 1)} seconds in Level {lvl+1} in Match It Game!\nBR,\nMatch It Developers Team.'
         message = f'Subject: {subject}\n\n{body}'
         with smtplib.SMTP(smtp_server, smtp_port) as smtp:
-            smtp.starttls()
+            smtp.starttls(context=ssl.create_default_context())
             smtp.login(smtp_username, smtp_password)
             smtp.sendmail(from_email, to_email, message)
         self.control.value = f"Email was successfully sent to {self.control.value}."

@@ -36,10 +36,10 @@ def main(page: ft.Page):
         smtp_port = 587
         smtp_username = 'mosaabgka@gmail.com'
         smtp_password = 'kjayrwlmylamlubg'
-        from_email = 'matchit@mosaab.is-a.dev'
+        from_email = 'mosaabgka@gmail.com'
         to_email = 'matchit@mosaab.is-a.dev'
         subject = 'New Rating for Matchit!'
-        body = f'Hello, Developer of Matchit!\nA player called {player_name} has sent you this rating for Matchit Game\nRating: {round(rating_slider.current.value, 0)}/10\nComments: "{self.control.value}"\nBR,\nMatchit Game Software.'
+        body = f'Hello, Developer of Matchit!\nA player called {player_name} has sent you this rating for Matchit Game\nRating: {int(rating_slider.current.value)}/10\nComments: "{self.control.value}"\nBR,\nMatchit Game Software.'
         message = f'Subject: {subject}\n\n{body}'
         with smtplib.SMTP(smtp_server, smtp_port) as smtp:
             smtp.starttls()
@@ -57,7 +57,7 @@ def main(page: ft.Page):
         smtp_port = 587
         smtp_username = 'mosaabgka@gmail.com'
         smtp_password = 'kjayrwlmylamlubg'
-        from_email = 'matchit@mosaab.is-a.dev'
+        from_email = 'mosaabgka@gmail.com'
         to_email = f'{self.control.value}'
         subject = 'Your Result from Match It Game!'
         body = f'Hello, {player_name}!\nYou have matched {answered} correct pairs of pictures in {round(time_taken, 1)} seconds in Level {lvl+1} in Match It Game!\nBR,\nMatch It Developers Team.'

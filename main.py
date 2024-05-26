@@ -448,7 +448,7 @@ def main(page: ft.Page):
                 ft.TextField(ref=player_name_field, label="Player Name", on_submit=check_login_credentials,
                              autofocus=True, hint_text="Enter your name"),
                 ft.TextField(ref=password_field, label="Password", password=True, can_reveal_password=True,
-                             on_submit=check_login_credentials, hint_text="Try to PASS"),
+                             on_submit=check_login_credentials, hint_text="Enter \"PASS\""),
                 ft.FilledButton(text="Login", icon=ft.icons.LOGIN, height=50, on_click=check_login_credentials),
             ], alignment=ft.MainAxisAlignment.CENTER),
             ft.Text("Please provide a player name.", ref=name_alert, color=ft.colors.ORANGE, opacity=0,
@@ -458,7 +458,7 @@ def main(page: ft.Page):
             ft.Text("", ref=correct_password_alert, color=ft.colors.GREEN, opacity=0, animate_opacity=300),
         ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
         ft.Row([
-            ft.Text("Made with ❤ by Mosaab, Ohoud, Zeinab, and Logain.")
+            ft.Text("Made with ❤ by Mosaab.")
         ], alignment=ft.MainAxisAlignment.CENTER)
     )
 
